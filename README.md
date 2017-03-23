@@ -86,3 +86,4 @@ Read file [THANKS](THANKS).
 * [GOMove](http://rochet2.github.io/GOMove.html)
 * [Reforging](http://rochet2.github.io/Reforging.html)
 * [Transmogrification](http://rochet2.github.io/Transmogrification.html)
+* [Removed 32767 Stats Cap](http://www.ac-web.org/forums/showthread.php?171851-Guide-to-remove-32767-stats-cap-for-TrinityCore)
