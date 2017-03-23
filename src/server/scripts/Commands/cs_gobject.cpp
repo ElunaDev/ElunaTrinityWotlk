@@ -48,6 +48,7 @@ public:
         {
             { "phase", rbac::RBAC_PERM_COMMAND_GOBJECT_SET_PHASE, false, &HandleGameObjectSetPhaseCommand,  "" },
             { "state", rbac::RBAC_PERM_COMMAND_GOBJECT_SET_STATE, false, &HandleGameObjectSetStateCommand,  "" },
+            { "scale", rbac::RBAC_PERM_COMMAND_GOBJECT_SET_SCALE, false, &HandleGameObjectSetScaleCommand,  "" },
         };
         static std::vector<ChatCommand> gobjectCommandTable =
         {
@@ -691,6 +692,54 @@ public:
             object->SendMessageToSet(&data, true);
         }
         handler->PSendSysMessage("Set gobject type %d state %d", objectType, objectState);
+        return true;
+    }
+
+    static bool HandleGameObjectSetScaleCommand(ChatHandler* handler, char const* args)
+    {
+        // number or [name] Shift-click form |color|Hgameobject:go_id|h[name]|h|r
+        char* id = handler->extractKeyFromLink((char*)args, "Hgameobject");
+        if (!id)
+            return false;
+
+        ObjectGuid::LowType guidLow = atoul(id);
+        if (!guidLow)
+            return false;
+
+        GameObject* object = handler->GetObjectFromPlayerMapByDbGuid(guidLow);
+        if (!object)
+        {
+            handler->PSendSysMessage(LANG_COMMAND_OBJNOTFOUND, guidLow);
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
+
+        char* scale_temp = strtok(NULL, " ");
+        if (!scale_temp)
+        {
+            handler->SendSysMessage(LANG_BAD_VALUE);
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
+
+        float scale = atof(scale_temp);
+
+        if (scale <= 0.0f)
+        {
+            scale = object->GetGOInfo()->size;
+            const_cast<GameObjectData*>(object->GetGOData())->size = -1.0f;
+        }
+        else
+        {
+            const_cast<GameObjectData*>(object->GetGOData())->size = scale;
+        }
+
+        object->SetObjectScale(scale);
+        object->DestroyForNearbyPlayers();
+        object->UpdateObjectVisibility();
+        object->SaveToDB();
+
+        handler->PSendSysMessage("Set %s scale to %f", object->GetGUID().ToString(), scale);
         return true;
     }
 };
