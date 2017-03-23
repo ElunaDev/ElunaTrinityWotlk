@@ -66,6 +66,18 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket& recvData)
         return;
     }
 
+    if (sWorld->getBoolConfig(CONFIG_BATTLEGROUND_CROSSFACTION) && lang != LANG_ADDON)
+    {
+        switch (type)
+        {
+            case CHAT_MSG_BATTLEGROUND:
+            case CHAT_MSG_BATTLEGROUND_LEADER:
+                lang = LANG_UNIVERSAL;
+            default:
+                break;
+        }
+    }
+
     Player* sender = GetPlayer();
 
     //TC_LOG_DEBUG("CHAT: packet received. type %u, lang %u", type, lang);
@@ -258,6 +270,10 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket& recvData)
             if (!sEluna->OnChat(sender, type, lang, msg))
                 return;
 #endif
+
+            if (!GetPlayer()->IsGameMaster())
+                 if (GetPlayer()->SendBattleGroundChat(type, msg))
+                    return;
 
             sender->Say(msg, Language(lang));
             break;

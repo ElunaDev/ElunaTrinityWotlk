@@ -2382,6 +2382,14 @@ AutoBroadcast.Timer = 600000
 Battleground.CastDeserter = 1
 
 #
+#    Battleground.CrossFactionBG.Enable
+#        Description: Mixed battleground teams from both factions in each.
+#        Default:     1 - (Enabled)
+#                     0 - (Disabled)
+
+Battleground.CrossFactionBG.Enable = 1
+
+#
 #    Battleground.QueueAnnouncer.Enable
 #        Description: Announce battleground queue status to chat.
 #        Default:     0 - (Disabled)

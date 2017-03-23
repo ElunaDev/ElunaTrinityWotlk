@@ -90,3 +90,4 @@ Read file [THANKS](THANKS).
 * [Changed All Level Caps to 80](http://www.ac-web.org/forums/showthread.php?173833-Max-lvl-255)
 * [Hunter Pets Talent Rate Depends on RATE_TALENT](https://community.trinitycore.org/topic/7523-hunter-pets-and-rate_talent-petcpp/?#comment-49002)
 * [Phased duel (pets work)](http://www.emudevs.com/archive/index.php/t-3413.html)
+* [CrossFactionBG](http://www.ac-web.org/forums/showthread.php?222459-CrossFactionBG)
