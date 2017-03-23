@@ -89,3 +89,4 @@ Read file [THANKS](THANKS).
 * [Removed 32767 Stats Cap](http://www.ac-web.org/forums/showthread.php?171851-Guide-to-remove-32767-stats-cap-for-TrinityCore)
 * [Changed All Level Caps to 80](http://www.ac-web.org/forums/showthread.php?173833-Max-lvl-255)
 * [Hunter Pets Talent Rate Depends on RATE_TALENT](https://community.trinitycore.org/topic/7523-hunter-pets-and-rate_talent-petcpp/?#comment-49002)
+* [Phased duel (pets work)](http://www.emudevs.com/archive/index.php/t-3413.html)
