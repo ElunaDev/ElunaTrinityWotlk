@@ -87,3 +87,4 @@ Read file [THANKS](THANKS).
 * [Reforging](http://rochet2.github.io/Reforging.html)
 * [Transmogrification](http://rochet2.github.io/Transmogrification.html)
 * [Removed 32767 Stats Cap](http://www.ac-web.org/forums/showthread.php?171851-Guide-to-remove-32767-stats-cap-for-TrinityCore)
+* [Changed All Level Caps to 80](http://www.ac-web.org/forums/showthread.php?173833-Max-lvl-255)

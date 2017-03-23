@@ -44,11 +44,11 @@ enum LevelLimit
 
     // client supported max level for player/pets/etc. Avoid overflow or client stability affected.
     // also see GT_MAX_LEVEL define
-    MAX_LEVEL = 100,
+    MAX_LEVEL = 80,
 
     // Server side limitation. Base at used code requirements.
     // also see MAX_LEVEL and GT_MAX_LEVEL define
-    STRONG_MAX_LEVEL = 255,
+    STRONG_MAX_LEVEL = 80,
 };
 
 enum BattlegroundBracketId                                  // bracketId for level ranges
