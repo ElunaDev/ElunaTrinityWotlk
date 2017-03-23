@@ -153,7 +153,7 @@ enum CharacterCustomizeFlags
 #define DEATH_EXPIRE_STEP (5*MINUTE)
 #define MAX_DEATH_COUNT 3
 
-static uint32 copseReclaimDelay[MAX_DEATH_COUNT] = { 30, 60, 120 };
+static uint32 copseReclaimDelay[MAX_DEATH_COUNT] = { 0, 5, 10 };
 
 uint32 const MAX_MONEY_AMOUNT = static_cast<uint32>(std::numeric_limits<int32>::max());
 
@@ -5181,7 +5181,7 @@ void Player::RepopAtGraveyard()
     // and don't show spirit healer location
     if (ClosestGrave)
     {
-        TeleportTo(ClosestGrave->map_id, ClosestGrave->x, ClosestGrave->y, ClosestGrave->z, GetOrientation());
+        //TeleportTo(ClosestGrave->map_id, ClosestGrave->x, ClosestGrave->y, ClosestGrave->z, GetOrientation());
         if (isDead())                                        // not send if alive, because it used in TeleportTo()
         {
             WorldPacket data(SMSG_DEATH_RELEASE_LOC, 4*4);  // show spirit healer position on minimap

@@ -91,3 +91,4 @@ Read file [THANKS](THANKS).
 * [Hunter Pets Talent Rate Depends on RATE_TALENT](https://community.trinitycore.org/topic/7523-hunter-pets-and-rate_talent-petcpp/?#comment-49002)
 * [Phased duel (pets work)](http://www.emudevs.com/archive/index.php/t-3413.html)
 * [CrossFactionBG](http://www.ac-web.org/forums/showthread.php?222459-CrossFactionBG)
+* [Remove Player Resurrect Timer and Spawning at GY](http://www.ac-web.org/forums/showthread.php?175120-C-Remove-Player-Resurrect-Timer-and-Spawning-at-GY)
