@@ -79,10 +79,10 @@ Read file [THANKS](THANKS).
 
 ## Changelog
 
-* Passive Anticheat(https://community.trinitycore.org/topic/10-patch-telenpc3-pvpranks-passive-anticheat-for-trinitycore-2017-02-07-00889ba-35a-only/)
-* Objscale(http://rochet2.github.io/Objscale.html)
-* Multivendor(http://rochet2.github.io/Multivendor.html)
-* Dress NPCs(http://rochet2.github.io/Dress-NPCs.html)
-* GOMove(http://rochet2.github.io/GOMove.html)
-* Reforging(http://rochet2.github.io/Reforging.html)
-* Transmogrification(http://rochet2.github.io/Transmogrification.html)
+* [Passive Anticheat](https://community.trinitycore.org/topic/10-patch-telenpc3-pvpranks-passive-anticheat-for-trinitycore-2017-02-07-00889ba-35a-only/)
+* [Objscale](http://rochet2.github.io/Objscale.html)
+* [Multivendor](http://rochet2.github.io/Multivendor.html)
+* [Dress NPCs](http://rochet2.github.io/Dress-NPCs.html)
+* [GOMove](http://rochet2.github.io/GOMove.html)
+* [Reforging](http://rochet2.github.io/Reforging.html)
+* [Transmogrification](http://rochet2.github.io/Transmogrification.html)
