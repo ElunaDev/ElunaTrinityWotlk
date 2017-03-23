@@ -76,3 +76,7 @@ Read file [THANKS](THANKS).
 * [Website](https://www.trinitycore.org)
 * [Wiki](https://www.trinitycore.info)
 * [Forums](https://community.trinitycore.org)
+
+## Changelog
+
+* Passive Anticheat
