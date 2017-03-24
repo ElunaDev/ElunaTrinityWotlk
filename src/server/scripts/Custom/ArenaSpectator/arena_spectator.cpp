@@ -44,6 +44,23 @@ class arena_spectator_commands : public CommandScript
 public:
     arena_spectator_commands() : CommandScript("arena_spectator_commands") { }
 
+    std::vector<ChatCommand> GetCommands() const override
+    {
+        static std::vector<ChatCommand> spectateCommandTable =
+        {
+            { "player", rbac::RBAC_PERM_COMMAND_SPECTATE_PLAYER, true,     &HandleSpectateCommand, "" },
+            { "view", rbac::RBAC_PERM_COMMAND_SPECTATE_VIEW, true,     &HandleSpectateFromCommand, "" },
+            { "reset", rbac::RBAC_PERM_COMMAND_SPECTATE_RESET, true,  &HandleSpectateResetCommand, "" },
+            { "leave", rbac::RBAC_PERM_COMMAND_SPECTATE_LEAVE, true, &HandleSpectateCancelCommand, "" },
+        };
+
+        static std::vector<ChatCommand> commandTable =
+        {
+            { "spectate", rbac::RBAC_PERM_COMMAND_SPECTATE, false, NULL, "",     spectateCommandTable },
+        };
+        return commandTable;
+    }
+
     static bool HandleSpectateCommand(ChatHandler* handler, char const* args)
     {
         Player* target;
@@ -175,8 +192,8 @@ public:
                 {
                     handler->PSendSysMessage("You entered a Rated Arena.");
                     handler->PSendSysMessage("Teams:");
-                    handler->PSendSysMessage("|cFFffffff%s|r vs |cFFffffff%s|r", firstTeam->GetName().c_str(), secondTeam->GetName().c_str());
-                    handler->PSendSysMessage("|cFFffffff%u(%u)|r -- |cFFffffff%u(%u)|r", firstTeam->GetRating(), firstTeam->GetAverageMMR(firstTeamMember->GetGroup()),
+                    handler->PSendSysMessage("|cffffffff%s|r vs |cffffffff%s|r", firstTeam->GetName().c_str(), secondTeam->GetName().c_str());
+                    handler->PSendSysMessage("|cffffffff%u(%u)|r -- |cffffffff%u(%u)|r", firstTeam->GetRating(), firstTeam->GetAverageMMR(firstTeamMember->GetGroup()),
                         secondTeam->GetRating(), secondTeam->GetAverageMMR(secondTeamMember->GetGroup()));
                 }
             }
@@ -329,23 +346,6 @@ public:
 
         return true;
     }
-
-    std::vector<ChatCommand> GetCommands() const override
-    {
-        static std::vector<ChatCommand> spectateCommandTable =
-        {
-            { "player", rbac::RBAC_PERM_COMMAND_SPECTATE_PLAYER, true,     &HandleSpectateCommand, "" },
-            { "view", rbac::RBAC_PERM_COMMAND_SPECTATE_VIEW, true,     &HandleSpectateFromCommand, "" },
-            { "reset", rbac::RBAC_PERM_COMMAND_SPECTATE_RESET, true,  &HandleSpectateResetCommand, "" },
-            { "leave", rbac::RBAC_PERM_COMMAND_SPECTATE_LEAVE, true, &HandleSpectateCancelCommand, "" },
-        };
-
-        static std::vector<ChatCommand> commandTable =
-        {
-            { "spectate", rbac::RBAC_PERM_COMMAND_SPECTATE, false, NULL, "",     spectateCommandTable },
-        };
-        return commandTable;
-    }
 };
 
 
@@ -367,42 +367,39 @@ class npc_arena_spectator : public CreatureScript
 public:
     npc_arena_spectator() : CreatureScript("npc_arena_spectator") { }
 
-    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* player, Creature* creature) override
     {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "|TInterface/ICONS/Achievement_Arena_2v2_7:30:30:-18:0|tGames: 2v2", GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_2V2_GAMES);
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "|TInterface/ICONS/Achievement_Arena_3v3_7:30:30:-18:0|tGames: 3v3", GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_3V3_GAMES);
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "|TInterface/ICONS/Achievement_Arena_5v5_7:30:30:-18:0|tGames: 5v5", GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_5V5_GAMES);
-        pPlayer->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_ICON_CHAT, "|TInterface/ICONS/Spell_Holy_DevineAegis:30:30:-18:0|tSpectate Specific Player.", GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_SPECIFIC, "", 0, true);
-        pPlayer->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, pCreature->GetGUID());
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|TInterface/ICONS/Achievement_Arena_2v2_7:30:30:-18:0|tGames: 2v2", GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_2V2_GAMES);
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|TInterface/ICONS/Achievement_Arena_3v3_7:30:30:-18:0|tGames: 3v3", GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_3V3_GAMES);
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|TInterface/ICONS/Achievement_Arena_5v5_7:30:30:-18:0|tGames: 5v5", GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_5V5_GAMES);
+        AddGossipItemFor(player, GOSSIP_ICON_CHAT, "|TInterface/ICONS/Spell_Holy_DivineSpirit:30:30:-18:0|tSpectate Specific Player.", GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_SPECIFIC, "", 0, true);
+        SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
         return true;
     }
 
-    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action)
+    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action) override
     {
-        player->PlayerTalkClass->ClearMenus();
+        ClearGossipMenuFor(player);
 
-        if (action == NPC_SPECTATOR_ACTION_SPECIFIC)
-        {
-
-        }
+        if (action == NPC_SPECTATOR_ACTION_SPECIFIC) { }
 
         if (action >= NPC_SPECTATOR_ACTION_2V2_GAMES && action < NPC_SPECTATOR_ACTION_3V3_GAMES)
         {
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "|TInterface/PaperDollInfoFrame/UI-GearManager-Undo:30:30:-18:0|tUpdate menu", GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_2V2_GAMES);
+            AddGossipItemFor(player, GOSSIP_ICON_DOT, "|TInterface/PaperDollInfoFrame/UI-GearManager-Undo:30:30:-18:0|tUpdate menu", GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_2V2_GAMES);
             ShowPage(player, action - NPC_SPECTATOR_ACTION_2V2_GAMES, ARENA_TYPE_2v2);
-            player->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
+            SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
         }
         else if (action >= NPC_SPECTATOR_ACTION_3V3_GAMES && action < NPC_SPECTATOR_ACTION_5V5_GAMES)
         {
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "|TInterface/PaperDollInfoFrame/UI-GearManager-Undo:30:30:-18:0|tUpdate menu", GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_3V3_GAMES);
+            AddGossipItemFor(player, GOSSIP_ICON_DOT, "|TInterface/PaperDollInfoFrame/UI-GearManager-Undo:30:30:-18:0|tUpdate menu", GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_3V3_GAMES);
             ShowPage(player, action - NPC_SPECTATOR_ACTION_3V3_GAMES, ARENA_TYPE_3v3);
-            player->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
+            SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
         }
         else if (action >= NPC_SPECTATOR_ACTION_5V5_GAMES && action < NPC_SPECTATOR_ACTION_SELECTED_PLAYER)
         {
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "|TInterface/PaperDollInfoFrame/UI-GearManager-Undo:30:30:-18:0|tUpdate menu", GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_5V5_GAMES);
+            AddGossipItemFor(player, GOSSIP_ICON_DOT, "|TInterface/PaperDollInfoFrame/UI-GearManager-Undo:30:30:-18:0|tUpdate menu", GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_5V5_GAMES);
             ShowPage(player, action - NPC_SPECTATOR_ACTION_5V5_GAMES, ARENA_TYPE_5v5);
-            player->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
+            SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
         }
         else
         {
@@ -548,7 +545,7 @@ public:
                     }
 
                     if (TypeOne >= page * GamesOnPage)
-                        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_BATTLE, GetGamesStringData(arena, mmr, mmrTwo), GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_SELECTED_PLAYER + GetFirstPlayerGuid(arena));
+                        AddGossipItemFor(player, GOSSIP_ICON_BATTLE, GetGamesStringData(arena, mmr, mmrTwo), GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_SELECTED_PLAYER + GetFirstPlayerGuid(arena));
                 }
                 else if (IsTop == 2 && arena->GetArenaType() == ARENA_TYPE_3v3)
                 {
@@ -560,7 +557,7 @@ public:
                     }
 
                     if (TypeTwo >= page * GamesOnPage)
-                        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_BATTLE, GetGamesStringData(arena, mmr, mmrTwo), GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_SELECTED_PLAYER + GetFirstPlayerGuid(arena));
+                        AddGossipItemFor(player, GOSSIP_ICON_BATTLE, GetGamesStringData(arena, mmr, mmrTwo), GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_SELECTED_PLAYER + GetFirstPlayerGuid(arena));
                 }
 
                 else if (IsTop == 3 && arena->GetArenaType() == ARENA_TYPE_5v5)
@@ -572,33 +569,33 @@ public:
                         break;
                     }
                     if (TypeThree >= page * GamesOnPage)
-                        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_BATTLE, GetGamesStringData(arena, mmr, mmrTwo), GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_SELECTED_PLAYER + GetFirstPlayerGuid(arena));
+                        AddGossipItemFor(player, GOSSIP_ICON_BATTLE, GetGamesStringData(arena, mmr, mmrTwo), GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_SELECTED_PLAYER + GetFirstPlayerGuid(arena));
                 }
             }
         }
 
         if (page > 0)
         {
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "|TInterface/ICONS/Ability_Spy:30:30:-18:0|tBack..", GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_2V2_GAMES + page - 1);
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "|TInterface/ICONS/Ability_Spy:30:30:-18:0|tBack..", GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_3V3_GAMES + page - 1);
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "|TInterface/ICONS/Ability_Spy:30:30:-18:0|tBack..", GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_5V5_GAMES + page - 1);
+            AddGossipItemFor(player, GOSSIP_ICON_DOT, "|TInterface/ICONS/Ability_Spy:30:30:-18:0|tBack..", GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_2V2_GAMES + page - 1);
+            AddGossipItemFor(player, GOSSIP_ICON_DOT, "|TInterface/ICONS/Ability_Spy:30:30:-18:0|tBack..", GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_3V3_GAMES + page - 1);
+            AddGossipItemFor(player, GOSSIP_ICON_DOT, "|TInterface/ICONS/Ability_Spy:30:30:-18:0|tBack..", GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_5V5_GAMES + page - 1);
         }
 
         if (haveNextPage)
         {
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "|TInterface/ICONS/INV_Misc_Note_03:30:30:-18:0|tNext..", GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_2V2_GAMES + page + 1);
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "|TInterface/ICONS/INV_Misc_Note_03:30:30:-18:0|tNext..", GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_3V3_GAMES + page + 1);
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "|TInterface/ICONS/INV_Misc_Note_03:30:30:-18:0|tNext..", GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_5V5_GAMES + page + 1);
+            AddGossipItemFor(player, GOSSIP_ICON_DOT, "|TInterface/ICONS/INV_Misc_Note_03:30:30:-18:0|tNext..", GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_2V2_GAMES + page + 1);
+            AddGossipItemFor(player, GOSSIP_ICON_DOT, "|TInterface/ICONS/INV_Misc_Note_03:30:30:-18:0|tNext..", GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_3V3_GAMES + page + 1);
+            AddGossipItemFor(player, GOSSIP_ICON_DOT, "|TInterface/ICONS/INV_Misc_Note_03:30:30:-18:0|tNext..", GOSSIP_SENDER_MAIN, NPC_SPECTATOR_ACTION_5V5_GAMES + page + 1);
         }
     }
 
-    bool OnGossipSelectCode(Player* player, Creature* creature, uint32 sender, uint32 action, const char* code)
+    bool OnGossipSelectCode(Player* player, Creature* creature, uint32 sender, uint32 action, const char* code) override
     {
         if (!player)
             return true;
 
-        player->PlayerTalkClass->ClearMenus();
-        player->CLOSE_GOSSIP_MENU();
+        ClearGossipMenuFor(player);
+        CloseGossipMenuFor(player);
         if (sender == GOSSIP_SENDER_MAIN)
         {
             switch (action)
@@ -634,7 +631,6 @@ public:
         return false;
     }
 };
-
 
 void AddSC_arena_spectator_script()
 {
