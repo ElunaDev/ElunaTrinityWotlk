@@ -16,11 +16,11 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "AnticheatMgr.h"
 #include "Transmogrification.h"
 #include "Player.h"
 #include "AccountMgr.h"
 #include "AchievementMgr.h"
+#include "AnticheatMgr.h"
 #include "ArenaTeam.h"
 #include "ArenaTeamMgr.h"
 #include "Battlefield.h"
@@ -12525,11 +12525,8 @@ void Player::MoveItemFromInventory(uint8 bag, uint8 slot, bool update)
 {
     if (Item* it = GetItemByPos(bag, slot))
     {
-<<<<<<< HEAD
         RemoveReforge(this, it->GetGUID().GetCounter(), true);
-=======
         sTransmogrification->DeleteFakeEntry(this, it);
->>>>>>> 568356cec43b01ab4ecfaad4add75bf8ca9dd9d8
         ItemRemovedQuestCheck(it->GetEntry(), it->GetCount());
         RemoveItem(bag, slot, update);
         it->SetNotRefundable(this, false);
@@ -23024,7 +23021,8 @@ void Player::LearnCustomSpells()
             GetName().c_str(), GetGUID().ToString().c_str(), uint32(getClass()), uint32(getCFSRace()), tspell);
         if (!IsInWorld())                                    // will send in INITIAL_SPELLS in list anyway at map add
             AddSpell(tspell, true, true, true, false);
-        else                                                // but send in normal spell in game learn case            LearnSpell(tspell, true);
+        else                                                // but send in normal spell in game learn case
+            LearnSpell(tspell, true);
     }
 }
 
@@ -26995,7 +26993,7 @@ void Player::SetSpectate(bool on)
         spectateCanceled = false;
         spectatorFlag = false;
         RestoreDisplayId();
-        UpdateSpeed(MOVE_RUN, true);
+        UpdateSpeed(MOVE_RUN);
     }
     UpdateObjectVisibility();
 }
