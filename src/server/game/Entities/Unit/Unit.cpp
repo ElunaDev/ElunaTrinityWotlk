@@ -376,6 +376,19 @@ Unit::~Unit()
             m_currentSpells[i] = nullptr;
         }
 
+    // remove view point for spectator
+    if (!m_sharedVision.empty())
+    {
+        for (SharedVisionList::iterator itr = m_sharedVision.begin(); itr != m_sharedVision.end(); ++itr)
+            if ((*itr)->IsSpectator() && (*itr)->getSpectateFrom())
+            {
+                (*itr)->SetViewpoint((*itr)->getSpectateFrom(), false);
+                if (m_sharedVision.empty())
+                    break;
+                --itr;
+            }
+    }
+
     m_Events.KillAllEvents(true);
 
     _DeleteRemovedAuras();
