@@ -1,6 +1,6 @@
-#Reforging [![Build Status](https://travis-ci.org/Rochet2/TrinityCore.svg?branch=reforging)](https://travis-ci.org/Rochet2/TrinityCore)
+# Reforging [![Build Status](https://travis-ci.org/Rochet2/TrinityCore.svg?branch=reforging)](https://travis-ci.org/Rochet2/TrinityCore)
 
-####About
+#### About
 Blizz*like* reforging
 Change 40% of your item stats to something else
 Sends item packets so you can see the changes on item tooltips
@@ -10,7 +10,7 @@ Source: http://rochet2.github.io/Reforging.html
 
 Video: https://youtu.be/84EtvKTfqQM
 
-####Installation
+#### Installation
 
 Available as:
 - Direct merge: https://github.com/Rochet2/TrinityCore/tree/reforging
@@ -36,5 +36,5 @@ After compiling:
 - Run `characters.sql` to your characters database
  - optionally you can also insert a reforger NPC to your database by running `world_npc.sql` to your world database.
 
-####Bugs and Contact
+#### Bugs and Contact
 Report issues and similar to https://rochet2.github.io/
